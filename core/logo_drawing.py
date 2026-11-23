@@ -1,91 +1,71 @@
-"""
-logo_drawing.py
---------------
-Programmatic vector recreation of the Nasmat Al-Sharq logo as a ReportLab Drawing.
-
-The chevron symbol is drawn directly using polygon geometry so it is:
-  • Crisp at any scale (true vector — no rasterisation)
-  • Pixel-identical in proportions to the official logo
-  • Zero external file dependency
-
-Colours verified against the official brand image:
-  BRAND_TEAL  #1AACAB  — front/teal chevron + speed lines
-  BRAND_DARK  #2C3A47  — rear/charcoal chevron + dark text
-"""
+"""ReportLab vector drawing for the Homogeneous Speed Logistics mark."""
 
 from __future__ import annotations
 
-from reportlab.graphics.shapes import Drawing, Polygon, Rect
+from reportlab.graphics.shapes import Drawing, Path
 from reportlab.lib.colors import HexColor
 
-# ── Official brand colours ─────────────────────────────────────────────────────
-BRAND_TEAL = HexColor("#1AACAB")   # Nasmat teal
-BRAND_DARK = HexColor("#2C3A47")   # Nasmat charcoal
+BRAND_TEAL = HexColor("#3bb6ff")
+BRAND_DARK = HexColor("#1d7bb3")
+
+# SVG path commands in the supplied 1600 ? 881 viewBox. Quadratic curves are
+# converted to cubic B?zier curves when added to the ReportLab drawing.
+_MARK_PATHS = (
+    ("dark", (("M", 813, 0), ("L", 778, 83), ("Q", 640, 115, 542, 225),
+               ("Q", 600, 80, 813, 0), ("Z",))),
+    ("dark", (("M", 1213, 33), ("L", 1185, 109),
+               ("C", 800, 150, 590, 220, 479, 356),
+               ("C", 560, 130, 800, 80, 1213, 33), ("Z",))),
+    ("light", (("M", 1477, 117), ("L", 1600, 235), ("L", 1400, 278),
+                ("L", 1418, 241), ("C", 800, 235, 520, 350, 387, 537),
+                ("C", 470, 330, 700, 155, 1460, 153), ("Z",))),
+)
 
 
 def create_logo_drawing(width: float = 90, height: float = 90) -> Drawing:
-    """
-    Return a scalable ReportLab Drawing of the Nasmat Al-Sharq chevron symbol.
+    """Return the supplied speed mark as a scalable ReportLab vector."""
+    drawing = Drawing(width, height)
+    sx, sy = width / 1600, height / 881
 
-    The Drawing is a Flowable and can be placed directly in a Platypus story
-    or inside a Table cell.
+    def point(x: float, y: float, mirrored: bool) -> tuple[float, float]:
+        if mirrored:
+            x, y = 1600 - x, 881 - y
+        return x * sx, height - y * sy
 
-    Coordinate system used internally: 90 × 90 units (y-up, origin bottom-left).
-    All coordinates are scaled proportionally to the requested output size.
-
-    Args:
-        width:  Output width  in points (default 90pt ≈ 31.8 mm).
-        height: Output height in points (default 90pt ≈ 31.8 mm).
-    """
-    d = Drawing(width, height)
-
-    # Scale factors map the internal 90×90 grid → requested output size
-    sx = width  / 90.0
-    sy = height / 90.0
-
-    def pts(pairs: list[tuple[float, float]]) -> list[float]:
-        """Flatten and scale (x, y) pairs into a Polygon-ready flat list."""
-        result: list[float] = []
-        for x, y in pairs:
-            result.extend([x * sx, y * sy])
-        return result
-
-    # ── Speed lines: 3 thin teal horizontal bars (upper-mid-left) ─────────────
-    # Widths chosen so they end before the chevron's left edge (x≈16)
-    for raw_y, raw_w in [
-        (68.0, 13.0),   # top line     – shorter
-        (60.0, 18.0),   # middle line  – longest (motion-blur effect)
-        (52.0, 13.0),   # bottom line  – shorter
-    ]:
-        d.add(Rect(
-            0,              raw_y * sy,
-            raw_w * sx,     3.0 * sy,
-            fillColor=BRAND_TEAL,
-            strokeColor=None,
-        ))
-
-    # ── Dark charcoal chevron ─────────────────────────────────────────────────
-    # Drawn FIRST so the teal chevron appears on top.
-    # Offset +20 units to the right; arm thickness = 14/70 ≈ 20% of chevron height.
-    #
-    # Polygon trace (counter-clockwise in y-up space):
-    #   outer V  : (36,85) → tip (82,50) → (36,15)
-    #   inner notch: (36,15) → (36,29) → inner tip (64,50) → (36,71) → (36,85)
-    d.add(Polygon(pts([
-        (36, 85), (82, 50), (36, 15),   # outer V (top → tip → bottom)
-        (36, 29), (64, 50), (36, 71),   # inner notch
-    ]), fillColor=BRAND_DARK, strokeColor=None))
-
-    # ── Teal chevron ──────────────────────────────────────────────────────────
-    # Drawn LAST so it appears in front.
-    # Inner tip at 77% of outer tip distance → consistent with dark chevron ratio.
-    #
-    # Polygon trace:
-    #   outer V  : (16,85) → tip (62,50) → (16,15)
-    #   inner notch: (16,15) → (16,29) → inner tip (48,50) → (16,71) → (16,85)
-    d.add(Polygon(pts([
-        (16, 85), (62, 50), (16, 15),   # outer V
-        (16, 29), (48, 50), (16, 71),   # inner notch
-    ]), fillColor=BRAND_TEAL, strokeColor=None))
-
-    return d
+    for mirrored in (False, True):
+        for color_name, commands in _MARK_PATHS:
+            path = Path()
+            path.fillColor = BRAND_DARK if color_name == "dark" else BRAND_TEAL
+            path.strokeColor = None
+            current = (0.0, 0.0)
+            start = (0.0, 0.0)
+            for command in commands:
+                op, *args = command
+                if op == "M":
+                    current = (args[0], args[1])
+                    start = current
+                    path.moveTo(*point(*current, mirrored))
+                elif op == "L":
+                    current = (args[0], args[1])
+                    path.lineTo(*point(*current, mirrored))
+                elif op == "C":
+                    c1 = (args[0], args[1])
+                    c2 = (args[2], args[3])
+                    current = (args[4], args[5])
+                    path.curveTo(*point(*c1, mirrored), *point(*c2, mirrored),
+                                 *point(*current, mirrored))
+                elif op == "Q":
+                    control = (args[0], args[1])
+                    end = (args[2], args[3])
+                    c1 = (current[0] + 2 * (control[0] - current[0]) / 3,
+                          current[1] + 2 * (control[1] - current[1]) / 3)
+                    c2 = (end[0] + 2 * (control[0] - end[0]) / 3,
+                          end[1] + 2 * (control[1] - end[1]) / 3)
+                    path.curveTo(*point(*c1, mirrored), *point(*c2, mirrored),
+                                 *point(*end, mirrored))
+                    current = end
+                elif op == "Z":
+                    path.closePath()
+                    current = start
+            drawing.add(path)
+    return drawing

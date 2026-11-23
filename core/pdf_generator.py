@@ -1,12 +1,12 @@
 """
 pdf_generator.py
 ----------------
-Premium PDF report generator for Nasmat Al-Sharq Logistics.
+Premium PDF report generator for Homogeneous Speed Logistics.
 
 Layout per page:
   ┌─────────────────────────────────────────────────────────────────┐
-  │  [Logo Symbol]   شركة نسمات الشرق        Nasmat Al-Sharq       │
-  │                  للخدمات اللوجستية       Logistics Services Co. │
+  ?  [Logo Symbol]  Homogeneous Speed Logistics  ?
+  │                  السرعة المتجانسة للخدمات اللوجستية       Homogeneous Speed Logistics │
   │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
   │      3PL Delivery Quality Report  ·  Jul 2026  ·  31/07/2026   │
   ├─────────────────────────────────────────────────────────────────┤
@@ -15,7 +15,7 @@ Layout per page:
   │  1  │  ...  │  مصطفى العبدلي    │   606  │  601  │  100% │  A  │
   │  …  │  …    │  …                 │   …    │  …    │   …   │  …  │
   ├─────────────────────────────────────────────────────────────────┤
-  │  Nasmat Al-Sharq Logistics Services Co.  |  Confidential  Pg 1 │
+  │  Homogeneous Speed Logistics  |  Confidential  Pg 1 │
   └─────────────────────────────────────────────────────────────────┘
 """
 
@@ -108,7 +108,7 @@ def _make_footer(canvas, doc) -> None:
     canvas.setFillColor(_GRAY)
     canvas.drawString(
         left_m, 13 * mm,
-        "Nasmat Al-Sharq Logistics Services Co.  ·  Confidential",
+        "Homogeneous Speed Logistics  ·  Confidential",
     )
 
     # Right: page number
@@ -150,8 +150,8 @@ def generate_pdf(rows: list[ProcessedRow], month: str | None = None) -> bytes:
         rightMargin=10 * mm,
         topMargin=8 * mm,
         bottomMargin=24 * mm,          # space reserved for footer
-        title="3PL Delivery Quality Report — Nasmat Al-Sharq",
-        author="Nasmat Al-Sharq Logistics Services Co.",
+        title="3PL Delivery Quality Report — Homogeneous Speed Logistics",
+        author="Homogeneous Speed Logistics",
     )
 
     story: list = []
@@ -189,10 +189,9 @@ def generate_pdf(rows: list[ProcessedRow], month: str | None = None) -> bytes:
     )
 
     name_block = [
-        Paragraph(_ar("شركة نسمات الشرق"),          _s_ar_main),
-        Paragraph(_ar("للخدمات اللوجستية"),           _s_ar_sub),
-        Paragraph("Nasmat Al-Sharq",                   _s_en_name),
-        Paragraph("Logistics Services Co.",             _s_en_sub),
+        Paragraph(_ar("السرعة المتجانسة للخدمات اللوجستية"), _s_ar_main),
+        Paragraph("Homogeneous Speed Logistics", _s_en_name),
+        Paragraph(_ar("أُعدت بواسطة :أيوب الهاشم"), _s_ar_sub),
     ]
 
     logo_col_w = 62            # pts — logo cell
@@ -271,13 +270,13 @@ def generate_pdf(rows: list[ProcessedRow], month: str | None = None) -> bytes:
 
     # Header row
     table_data: list[list] = [[
-        Paragraph("SR",       _s_th),
-        Paragraph("ID NO",    _s_th),
-        Paragraph("NAMES",    _s_th),
-        Paragraph("ORDERS",   _s_th),
-        Paragraph("ON TIME",  _s_th),
-        Paragraph("PERCENT",  _s_th),
-        Paragraph("SEG",      _s_th),
+        Paragraph("#", _s_th),
+        Paragraph(_ar("رقم المعرف"), _s_th),
+        Paragraph(_ar("اسم الموظف"), _s_th),
+        Paragraph(_ar("طلبات"), _s_th),
+        Paragraph(_ar("الوقت المحدد"), _s_th),
+        Paragraph(_ar("نسبة"), _s_th),
+        Paragraph(_ar("فئة"), _s_th),
     ]]
 
     # Data rows

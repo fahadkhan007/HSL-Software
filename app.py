@@ -1,31 +1,37 @@
 from __future__ import annotations
-# pyrefly: ignore [invalid-syntax]
-from models.schemas import RiderResponse
-from fastapi.openapi.utils import status_code_ranges
-from models.schemas import RiderRequest
 
-# pyrefly: ignore [invalid-syntax]
-
-from importlib import import_module
-from fastapi import status
+import io
 import logging
 from contextlib import asynccontextmanager
-from typing import Any
 from datetime import datetime
 
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile
-from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-import io
+# pyrefly: ignore [invalid-syntax]
+from importlib import import_module
+from typing import Any
 
 from core.csv_processor import DataError, process_csv, rows_to_preview
 from core.pdf_generator import generate_pdf
-from core.rider_parser import build_rider_lookup
-from core.performance_processor import process_performance_csv, perf_rows_to_preview
 from core.performance_pdf_generator import generate_performance_pdf
-from models.schemas import GenerateRequest, UploadResponse, RiderAdd, RiderDelete, PerformanceRow, PerfGenerateRequest
+from core.performance_processor import perf_rows_to_preview, process_performance_csv
+from core.rider_parser import build_rider_lookup
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile, status
+from fastapi.openapi.utils import status_code_ranges
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from helper.json_helper import read_json, write_json
+
+# pyrefly: ignore [invalid-syntax]
+from models.schemas import (
+    GenerateRequest,
+    PerfGenerateRequest,
+    PerformanceRow,
+    RiderAdd,
+    RiderDelete,
+    RiderRequest,
+    RiderResponse,
+    UploadResponse,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -137,7 +143,7 @@ async def generate_report(request: GenerateRequest) -> StreamingResponse:
     )
 
 
-password="hello123"
+password="hsl@123"
 
 @app.post("/rider", status_code=status.HTTP_201_CREATED)
 async def add_rider(item : RiderAdd) -> str:

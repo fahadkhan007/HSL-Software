@@ -6,8 +6,8 @@
   --surface:   #FFFFFF;
   --surface-2: #F1F5F9;
   --border:    #E2E8F0;
-  --accent:    #1AACAB;
-  --accent-hover: #158f90;
+  --accent:    #3BB6FF;
+  --accent-hover: #1D7BB3;
   --text:      #2C3A47;
   --text-muted:#64748B;
   --success:   #10B981;
@@ -370,7 +370,7 @@ body {
 }
 .developer-name {
   font-weight: 600;
-  color: var(--accent); /* Nasmat teal accent */
+  color: var(--accent); /* Company logo accent */
   letter-spacing: 0.5px;
 }
 

@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3PL Report Generator | Al Nasmat</title>
+  <title>3PL Report Generator | Homogeneous Speed Logistics</title>
   <meta name="description" content="Upload your daily 3PL CSV and generate a formatted PDF delivery quality or rider performance report instantly." />
-  <link rel="icon" href="/static/favicon.png" type="image/png" />
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/style.css?v=5" />
+  <link rel="stylesheet" href="/static/style.css?v=6" />
 </head>
 <body>
   <!-- ── Background ── -->
@@ -20,10 +20,10 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="logo">
-        <img src="/image/companylogo.png" alt="Nasmat Al-Sharq" class="logo-img" style="max-height: 48px; width: auto; object-fit: contain;" />
+        <img src="/image/company-logo.svg" alt="Homogeneous Speed Logistics" class="logo-img" style="max-height: 48px; width: auto; object-fit: contain;" />
         <div>
-          <div class="logo-title">Nasmat Al-Sharq</div>
-          <div class="logo-sub">3PL Report Generator</div>
+          <div class="logo-title">Homogeneous Speed Logistics</div>
+          <div class="logo-sub" lang="ar" dir="rtl">السرعة المتجانسة للخدمات اللوجستية</div>
         </div>
       </div>
       <div class="header-badge" id="status-badge">
@@ -40,11 +40,11 @@
     <div class="tab-switcher" role="tablist">
       <button class="tab-btn tab-btn--active" id="tab-btn-dq" data-tab="tab-dq"
               role="tab" aria-selected="true" aria-controls="tab-dq">
-        📊 Delivery Quality Report
+        📊 تقرير جودة التسليم
       </button>
       <button class="tab-btn" id="tab-btn-perf" data-tab="tab-perf"
               role="tab" aria-selected="false" aria-controls="tab-perf">
-        📈 Rider Performance Report
+        📈 تقرير الأداء اليومي
       </button>
     </div>
 
@@ -57,13 +57,13 @@
       <section class="card" id="manage-section">
         <div class="card-header" style="margin-bottom: 0; align-items: center;">
           <div style="flex: 1;">
-            <h2 class="card-title">Manage Riders</h2>
-            <p class="card-desc">Add or remove riders from the system</p>
+            <h2 class="card-title">إدارة الموظفين</h2>
+            <p class="card-desc">إضافة أو إزالة الموظفين من النظام</p>
           </div>
           <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-            <button class="btn-primary" id="btn-view-riders">View Riders</button>
-            <button class="btn-primary btn-outline" id="btn-add-rider">+ Add Rider</button>
-            <button class="btn-primary btn-outline btn-danger" id="btn-delete-rider">− Delete Rider</button>
+            <button class="btn-primary" id="btn-view-riders">عرض الموظف</button>
+            <button class="btn-primary btn-outline" id="btn-add-rider">+ إضافة موظف</button>
+            <button class="btn-primary btn-outline btn-danger" id="btn-delete-rider">− حذف موظف</button>
           </div>
         </div>
       </section>
@@ -309,7 +309,7 @@
 
   <!-- ── Footer ── -->
   <footer class="site-footer">
-    <p>&copy; 2026 Nasmat Al-Sharq. All rights reserved.</p>
+    <p>&copy; 2026 Homogeneous Speed Logistics. All rights reserved.</p>
     <p>Developed by <span class="developer-name">Fahad Khan</span></p>
   </footer>
 

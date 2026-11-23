@@ -1,13 +1,13 @@
 """
 performance_pdf_generator.py
 -----------------------------
-Premium landscape A4 PDF report generator for the Nasmat 3PL Rider
-Performance report.
+Premium landscape A4 PDF report generator for the Homogeneous Speed Logistics
+Rider Performance report.
 
 Layout per page:
   ┌──────────────────────────────────────────────────────────────────────────────┐
-  │  [Logo]  شركة نسمات الشرق        Nasmat Al-Sharq                            │
-  │          للخدمات اللوجستية       Logistics Services Co.                      │
+  ?  [Logo]  Homogeneous Speed Logistics  ?
+  │          السرعة المتجانسة للخدمات اللوجستية       Homogeneous Speed Logistics                      │
   │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   │
   │   3PL Rider Performance Report  ·  Aug 2026  ·  Generated: 17/08/2026        │
   ├──────────────────────────────────────────────────────────────────────────────┤
@@ -16,7 +16,7 @@ Layout per page:
   │ 1  │ 783304   │ محمد …   │   32    │ 6 │ 16.00 │ 18.27 │ 100% │ - │0.72│100%│
   │ …                                                                            │
   ├──────────────────────────────────────────────────────────────────────────────┤
-  │  Nasmat Al-Sharq Logistics Services Co.  ·  Confidential          Page 1    │
+  │  Homogeneous Speed Logistics  ·  Confidential          Page 1    │
   └──────────────────────────────────────────────────────────────────────────────┘
 
 Orientation : Landscape A4  (841.89 × 595.28 pt  →  usable ≈ 785 pt wide)
@@ -140,7 +140,7 @@ def _make_perf_footer(canvas, doc) -> None:
     canvas.setFillColor(_GRAY)
     canvas.drawString(
         left_m, 9 * mm,
-        "Nasmat Al-Sharq Logistics Services Co.  ·  Confidential",
+        "Homogeneous Speed Logistics  ·  Confidential",
     )
     canvas.drawRightString(
         right_m, 9 * mm,
@@ -183,8 +183,8 @@ def generate_performance_pdf(
         rightMargin=10 * mm,
         topMargin=8 * mm,
         bottomMargin=22 * mm,          # space reserved for footer
-        title="3PL Rider Performance Report — Nasmat Al-Sharq",
-        author="Nasmat Al-Sharq Logistics Services Co.",
+        title="3PL Rider Performance Report — Homogeneous Speed Logistics",
+        author="Homogeneous Speed Logistics",
     )
 
     story: list = []
@@ -220,10 +220,9 @@ def generate_performance_pdf(
     )
 
     name_block = [
-        Paragraph(_ar("شركة نسمات الشرق"),  _s_ar_main),
-        Paragraph(_ar("للخدمات اللوجستية"), _s_ar_sub),
-        Paragraph("Nasmat Al-Sharq",          _s_en_name),
-        Paragraph("Logistics Services Co.",   _s_en_sub),
+        Paragraph(_ar("السرعة المتجانسة للخدمات اللوجستية"), _s_ar_main),
+        Paragraph("Homogeneous Speed Logistics", _s_en_name),
+        Paragraph(_ar("أُعدت بواسطة :أيوب الهاشم"), _s_ar_sub),
     ]
 
     logo_col_w = 62
@@ -299,18 +298,18 @@ def generate_performance_pdf(
 
     # ── Header row ────────────────────────────────────────────────────────────
     table_data: list[list] = [[
-        Paragraph("SR",                    _s_th),
-        Paragraph("RIDER ID",              _s_th),
-        Paragraph("NAME",                  _s_th),
-        Paragraph("COMPLETED\nDELIVERIES", _s_th),
-        Paragraph("SHIFTS",                _s_th),
-        Paragraph("PLANNED\nHRS",          _s_th),
-        Paragraph("ACTUAL\nHRS",           _s_th),
-        Paragraph("ATTENDANCE\nRATE",      _s_th),
-        Paragraph("BREAK\nHRS",            _s_th),
-        Paragraph("LOST\nHRS",             _s_th),
-        Paragraph("ACCEPTANCE\nRATE",      _s_th),
-        Paragraph("DECLINED\nDELIVERIES",  _s_th),
+        Paragraph("#", _s_th),
+        Paragraph(_ar("رقم المعرف"), _s_th),
+        Paragraph(_ar("اسم الموظف"), _s_th),
+        Paragraph(_ar("إتمام الطلبات"), _s_th),
+        Paragraph(_ar("عدد الورديات"), _s_th),
+        Paragraph(_ar("ساعات المناوبة"), _s_th),
+        Paragraph(_ar("ساعات العمل"), _s_th),
+        Paragraph(_ar("معدل الحضور"), _s_th),
+        Paragraph(_ar("ساعات الاستراحة"), _s_th),
+        Paragraph(_ar("ساعات ضائعة"), _s_th),
+        Paragraph(_ar("معدل القبول"), _s_th),
+        Paragraph(_ar("رفض التسليم"), _s_th),
     ]]
 
     # ── Data rows ─────────────────────────────────────────────────────────────
