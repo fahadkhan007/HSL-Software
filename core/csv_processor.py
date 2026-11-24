@@ -40,6 +40,30 @@ class DataError(ValueError):
     """Raised when the CSV fails any integrity check."""
 
 
+def read_csv_bytes(content: bytes) -> pd.DataFrame:
+    """Read a CSV exported as UTF-8 or a common Windows code page."""
+    if content.startswith((b"\xff\xfe", b"\xfe\xff")):
+        decoded = content.decode("utf-16")
+    else:
+        try:
+            decoded = content.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            try:
+                windows_1256 = content.decode("cp1256")
+            except UnicodeDecodeError:
+                windows_1256 = ""
+            arabic_chars = sum(
+                "\u0600" <= char <= "\u06ff" for char in windows_1256
+            )
+            decoded = (
+                windows_1256
+                if arabic_chars
+                else content.decode("cp1252")
+            )
+
+    return pd.read_csv(io.StringIO(decoded), dtype=str)
+
+
 def process_csv(
     content: bytes,
     rider_lookup: dict[str, str],
@@ -60,7 +84,7 @@ def process_csv(
     """
     # ── 1. Parse CSV ──────────────────────────────────────────────────────────
     try:
-        df = pd.read_csv(io.BytesIO(content), dtype=str)
+        df = read_csv_bytes(content)
     except Exception as exc:
         raise DataError(f"Could not parse CSV: {exc}") from exc
 

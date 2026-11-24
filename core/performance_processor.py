@@ -17,13 +17,12 @@ Output is sorted by completed_deliveries descending.
 
 from __future__ import annotations
 
-import io
 import logging
 from typing import Any
 
 import pandas as pd
 
-from core.csv_processor import DataError  # shared exception — no duplication
+from core.csv_processor import DataError, read_csv_bytes  # shared CSV parsing
 from models.schemas import PerformanceRow
 
 logger = logging.getLogger(__name__)
@@ -66,7 +65,7 @@ def process_performance_csv(
     """
     # ── 1. Parse CSV ──────────────────────────────────────────────────────────
     try:
-        df = pd.read_csv(io.BytesIO(content), dtype=str)
+        df = read_csv_bytes(content)
     except Exception as exc:
         raise DataError(f"Could not parse CSV: {exc}") from exc
 

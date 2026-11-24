@@ -4,6 +4,7 @@ import io
 import logging
 from contextlib import asynccontextmanager
 from datetime import datetime
+from urllib.parse import quote
 
 # pyrefly: ignore [invalid-syntax]
 from importlib import import_module
@@ -135,11 +136,17 @@ async def generate_report(request: GenerateRequest) -> StreamingResponse:
 
     month_slug = request.month.replace(" ", "_")
     filename = f"3PL_Report_{month_slug}.pdf"
+    encoded_filename = quote(filename, safe="")
 
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="3PL_Report.pdf"; '
+                f"filename*=UTF-8''{encoded_filename}"
+            )
+        },
     )
 
 
@@ -290,9 +297,15 @@ async def generate_performance_report(request: PerfGenerateRequest) -> Streaming
 
     date_slug = request.report_date.replace(" ", "_")
     filename  = f"3PL_Performance_Report_{date_slug}.pdf"
+    encoded_filename = quote(filename, safe="")
 
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="3PL_Performance_Report.pdf"; '
+                f"filename*=UTF-8''{encoded_filename}"
+            )
+        },
     )
